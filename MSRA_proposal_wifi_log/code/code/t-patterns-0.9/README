@@ -1,0 +1,48 @@
+BASIC INFORMAION
+================
+This software is an implementation of the T-Pattern mining algorithm. Reference
+paper is "Trajectory Pattern Mining", by F. Giannotti, M. Nanni, D. Pedreschi 
+and F. Pinelli, published on KDD 2007 conference.
+This software is developed in C++.
+
+INSTALL:
+========
+The software is a command-line program, so no installation is needed.
+To compile, just move to the "src" folder and run "g++ *.cpp -o T-Pattern".
+In the "bin" folder, some precompiled binaries are provided, for Linux, Windows
+and MacOS.
+
+QUICK START:
+============
+To check whether the executable works, try the following, using the toy dataset
+provided in this package:
+
+./T-Pattern dataset/sample_dataset.txt 0.3 10 -side 50
+
+and see the output files.
+Detailed information on the tool usage can be found in the short manual 
+provided in folder "doc".
+
+PLATFORM:
+=========
+This program has been compiled using g++ 4.0 and tested on Linux, Windows and 
+Mac OS X.
+
+LICENSE TERMS
+=============
+Under GNU Public License terms. Please read the file COPYING
+
+BUGS and QUESTIONS:
+===================
+If you find any bugs or have any questions, please contact:
+     Mirco Nanni (mirco.nanni@isti.cnr.it)
+or   Fabio Pinelli (fabio.pinelli@isti.cnr.it).
+
+DIRECTORY CONTENTS:
+===================
+/         main directory with this README file, plus other licence information
+/src      sources of the tool
+/doc      small user manual (Latex + PDF)
+/bin      binaries compiled on Linux 2.6.17, Win 2000 SP4 and MacOS X 10.4.10
+/dataset  toy input dataset(s) to test the tool
+

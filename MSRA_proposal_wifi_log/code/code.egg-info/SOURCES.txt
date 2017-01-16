@@ -1,0 +1,12 @@
+setup.py
+bin/code-command
+code/__init__.py
+code/command_line.py
+code/text.py
+code.egg-info/PKG-INFO
+code.egg-info/SOURCES.txt
+code.egg-info/dependency_links.txt
+code.egg-info/entry_points.txt
+code.egg-info/not-zip-safe
+code.egg-info/requires.txt
+code.egg-info/top_level.txt

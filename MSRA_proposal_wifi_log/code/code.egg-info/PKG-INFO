@@ -1,0 +1,16 @@
+Metadata-Version: 1.1
+Name: code
+Version: 0.1
+Summary: ZOYI_KOLON_Analysis
+Home-page: https://github.com/Seondong/MSRA_proposal_wifi_log
+Author: Sundong Kim
+Author-email: sundong.kim@kaist.ac.kr
+License: MIT
+Description: ZOYI_KOLON_Analysis code for upcoming publications
+Keywords: funniest joke comedy flying circus
+Platform: UNKNOWN
+Classifier: Development Status :: 1 - Planning
+Classifier: License :: OSI Approved :: Python Software Foundation License
+Classifier: Natural Language :: Korean
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Database

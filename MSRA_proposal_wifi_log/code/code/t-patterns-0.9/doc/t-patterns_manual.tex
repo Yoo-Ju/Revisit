@@ -1,0 +1,157 @@
+\documentclass[12pt]{article}
+
+\usepackage{epsfig}
+%\DeclareGraphicsExtensions{.pdf, .ps}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}  
+\newtheorem{claim}{Claim}[section]
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proof}{Proof}
+\newtheorem{corollary}{Corollary}
+\newtheorem{example}{Example}
+\newtheorem{problem}{Problem}
+\newtheorem{property}{Property}
+
+\newcommand{\tdb}{\mathcal{D}}
+\newcommand{\freq}{\mathit{freq}}
+\newcommand{\items}{\mathcal{I}}
+\newcommand{\theory}{\mathit{Th}}
+\newcommand{\ftheory}{\mathit{FTh}_\tdb}
+\newcommand{\closure}{\mathit{Cl}}
+\newcommand{\monotone}{\mathcal{C}_{\mathit{M}}}
+\newcommand{\cmonotone}{\mathcal{C}_{\mathit{CM}}}
+\newcommand{\anti}{\mathcal{C}_{\mathit{AM}}}
+\newcommand{\succinct}{\mathcal{C}_{\mathit{S}}}
+\newcommand{\canti}{\mathcal{C}_{\mathit{CAM}}}
+\newcommand{\cfreq}{\mathcal{C}_{\mathit{freq}}}
+\newcommand{\looanti}{\mathcal{C}_{\mathit{LAM}}}
+\newcommand{\supp}{\mathit{supp}}
+\newcommand{\cov}{\mathit{cov}}
+\newcommand{\tid}{\mathit{tid}}
+\newcommand{\algo}{ExAMiner^{\mathcal{LAM}}}
+
+\newcommand{\conquest}{{\sc ConQueSt }}
+
+\begin{document}
+\pagestyle{empty}
+
+\title{T-Pattern Miner\footnote{This research is partly funded by the EU contract GeoPKDD
+IST-FP6-014915.}\\ \small Short user manual}
+
+\author{Mirco Nanni and Fabio Pinelli \\[4mm]
+Pisa KDD Laboratory \\
+\small ISTI - CNR, Area della Ricerca di Pisa \\ \small Via Giuseppe Moruzzi, 1 - 56124 Pisa, Italy }
+\vspace{10mm}
+\date{\today}
+
+\maketitle
+
+\pagestyle{plain}
+\clearpage
+\tableofcontents
+\pagestyle{plain}
+\clearpage
+\section{What is T-Pattern Miner}
+T-pattern Miner is a frequent sequential pattern algorithm designed for trajectory data that describe the movements of a set of Moving Objects, e.g., GPS traces of mobile devices. The extracted patterns are represented as sequences of spatial regions temporally annotated with typical transition times. The extraction engine of T-pattern Miner is based on the PrefixSpan algorithm. The extraction of annotated frequent patterns is performed w.r.t. a minimum support threshold (minimum frequency of a pattern) and a time threshold (time tolerance used in matching transition times). The regions used in the extracted patterns are computed by means of heuristics for locating Regions Of Interest (in particular: dense regions w.r.t. a density threshold) of bounded size over a grid.
+
+\section{Syntax}
+
+General syntax:
+\begin{quotation}
+\texttt{TPatternMiner <input\_file> <Min\_sup> <tau> [OPTIONS]}
+\end{quotation}
+
+{\tt input\_file} is a text file containing the input trajectories, formatted according to the specifications presented below.
+
+{\tt Min\_sup} is the minimum support threshold, i.e., a standard parameter used in frequent pattern mining algorithms. A pattern is {\em frequent} if it occurs at least {\tt Min\_sup} times in the dataset, and, by default, this value is also used to extract Regions of Interest on the grid: a cell of the grid is dense if at least {\tt Min\_sup} trajectories have crossed such cell. The default behavior can be changed by means of the {\tt -density} option described below.
+
+Finally, {\tt tau} is a {\em temporal tolerance} threshold used to find typical transition times: two transition times will be considered equivalent if their difference is not greater than {\tt tau}.
+
+The optional parameters:
+\begin{description}
+
+\item[-density NN]: the default value of this parameter is equal to the minimum support value. This threshold is used during the extraction of the Regions of Interest, for establishing if a cell is dense or not (the cell is dense $\Leftrightarrow$ density of the cell$\geq$NN).
+\item[-epsilon NN]: this is the spatial approximation around each point of the trajectories. The default value is equal to 0.
+\item[-no\_interpolate]: typically, we linearly interpolate the position of moving objects between two consecutive points of a trajectory. Setting this options the software uses only the input points for computing the density of the cells crossed by the trajectory. The default value is OFF.
+\item[-rescale\_density] Setting this options the density threshold proportionally decreases  w.r.t the number of trajectories belonging to the projected database. The default value for this parameter is OFF.
+\item[-time\_gap NN]: minimum temporal gap required between a region and the following one in the same pattern. The default value is 0.
+\item[-space\_gap NN]: minimum spatial distance between two consecutive regions in the same pattern. The default value is 0. 
+\item[-side NN]: size of the (square) cells used to compute Regions of Interest. Default is 1/100 of the diagonal of the spatial bounding box of the dataset.
+\item[-max\_reg\_size NN]: each side of the generated Regions of Interest must be large at most NN cells. The default value is $\infty$.
+\item[-difference\_tolerance NN]: two consecutive regions in a pattern can overlap at most of a fraction NN. The defaul is 0.
+\item[-semi\_static]: the Regions of Interest used in the patterns will be computed once for all the beginning of the computation -- instead of being refine through the computation. The default value is OFF.
+\item[-static FILENAME]: the Regions of Interest used in the patterns will be read from file and kept unchanged along the whole computation.
+ 
+\end{description}
+
+There are also available some debug parameters:
+
+\begin{description}
+\item[-max\_n\_trajs NN] : sets the maximum number of trajectories of the data input file that the algorithm has to take as input.
+\item[-max\_n\_points NN] : sets the maximum number of points that algorithm takes for each trajectory. With this parameter the dataset is cut vertically.
+\item[-skip\_first\_n\_trajs NN]: this parameter allows to skip the first NN trajectories in the dataset.
+\item[-verbose]: with this option active, the execution of the algorithm returns the files with all regions found for each extracted prefix. The default value is OFF and the algorithm returns only the file with all the regions and the frequent patterns extracted.
+\end{description}
+
+\section{Input format}
+
+Each line of the input file contains the whole trajectory of a moving object, i.e.:\\
+
+\noindent {\small $<$ID$>$ $<k=n. snapshots>$ $<t_1> <x_1> <y_1>$ \ldots $<t_k> <x_k> <y_k>$}\\
+
+In particular, times $t1, \ldots..., t_k$ have to be ordered (ascending order).
+
+\begin{example}
+The same line is broken for display purposes.
+
+\texttt{0 4 0.0 9933.0 8551.46 2.67 9944.38 8437.65 5.33 9963.98 \break 8324.4 8.0 9961.1 8209.65}
+\end{example}
+
+\section{Output format}
+
+The T-Pattern miner generates two files: \texttt{MiSTA.output} and \texttt{regions.output}. 
+
+The first file (\texttt{MiSTA.output}) contains the list of extracted frequent patterns ordered by length with relative temporal annotations, except the patterns of length 1 that have not temporal annotation (they contain only 1 region, so there is no transition at all). For each pattern, there is a line that describes the pattern with its relative support and absolute support. Then, such line is followed by the temporal annotations (transition times) associated with it, one set of intervals per line, described by their lower and upper bounds, with the corresponding frequency (also called density, in this context).
+
+\begin{example}
+This example shows a segment of file MiSTA.otuput, related to pattern "(0)$\rightarrow$(9)" and its transition times:
+\\ \\
+\texttt{(0) (9) : 0.5		[abs:126]} \\
+\texttt{[542.87,  544.6] Density: 76} \\
+\texttt{[545.4, 547.72] Density: 76}\\
+
+\end{example}
+
+The second file (\texttt{regions.output}) contains the description of the regions extracted for each prefix: the ID of the region, followed by its lower-left and upper-right coordinates in a 2D space.
+
+\begin{example}
+This example shows the content of regions.output, assuming it contains 3 regions:
+\\ \\ 
+\texttt{18  59 38 59 38}\\
+\texttt{19 58 38 59 39}\\
+\texttt{20 56 38 56 40}\\
+\end{example}
+
+\bibliographystyle{abbrv}
+\begin{thebibliography}{10}
+
+\bibitem{KDD07}
+F.~Giannotti, M.~Nanni, D.~Pedreschi, and F.~Pinelli.
+\newblock Trajectory Pattern Mining.
+\newblock In {\em Proc. of ACM International Conference on Knowledge Discovery and Data Mining (KDD 2007)}, 2007.
+\bibitem{SIAM06}
+F.~Giannotti, M.~Nanni, and D.~Pedreschi.
+\newblock Efficient mining of sequences with temporal annotations.
+\newblock In {\em Proc. SIAM Conference on Data Mining}, pages 346--357. SIAM,
+  2006.
+\bibitem{SAC06}
+F.~Giannotti, M.~Nanni, D.~Pedreschi, and F.~Pinelli.
+\newblock Mining Sequences with Temporal Annotations.
+\newblock In {\em Proc. of ACM SAC 2006 - DM Track}, 2006.
+
+\end{thebibliography}
+
+\end{document}
